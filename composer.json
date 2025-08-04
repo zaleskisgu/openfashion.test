@@ -56,6 +56,14 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "test:api": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --testsuite=Feature"
+        ],
+        "test:unit": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --testsuite=Unit"
+        ],
         "analyse": "php vendor/bin/phpstan analyse --memory-limit=2G",
         "analyse:fix": "php vendor/bin/phpstan analyse --generate-baseline --memory-limit=2G"
     },
