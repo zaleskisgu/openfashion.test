@@ -18,10 +18,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
         $users = User::all();
-        return UserResource::collection($users);
+        return response()->json([
+            'message' => 'All users retrieved successfully',
+            'data' => UserResource::collection($users)
+        ]);
     }
 
     /**
@@ -44,6 +47,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         return response()->json([
+            'message' => "User ID {$id} retrieved successfully",
             'data' => new UserResource($user)
         ]);
     }
@@ -82,6 +86,7 @@ class UserController extends Controller
     {
         $user = User::with('posts')->findOrFail($id);
         return response()->json([
+            'message' => "Posts for user ID {$id}",
             'data' => PostResource::collection($user->posts)
         ]);
     }
@@ -93,6 +98,7 @@ class UserController extends Controller
     {
         $user = User::with('comments')->findOrFail($id);
         return response()->json([
+            'message' => "Comments for user ID {$id}",
             'data' => CommentResource::collection($user->comments)
         ]);
     }

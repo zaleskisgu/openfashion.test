@@ -16,10 +16,13 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
         $comments = Comment::with(['user', 'post'])->get();
-        return CommentResource::collection($comments);
+        return response()->json([
+            'message' => 'All comments retrieved successfully',
+            'data' => CommentResource::collection($comments)
+        ]);
     }
 
     /**
@@ -42,6 +45,7 @@ class CommentController extends Controller
     {
         $comment = Comment::with(['user', 'post'])->findOrFail($id);
         return response()->json([
+            'message' => "Comment ID {$id} retrieved successfully",
             'data' => new CommentResource($comment)
         ]);
     }
