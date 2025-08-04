@@ -92,6 +92,24 @@ API будет доступен по адресу: `http://localhost:8000/api`
 
 ## Тестирование
 
+### Автотесты
+Проект включает полный набор автотестов для всех API endpoints:
+
+```bash
+# Запуск всех тестов
+composer test
+
+# Запуск только API тестов
+composer test:api
+
+# Запуск только unit тестов
+composer test:unit
+```
+
+**Статус тестов:** ✅ 43 теста проходят успешно (338 assertions)
+
+Подробная документация по тестам: [TESTING.md](TESTING.md)
+
 ### С Postman
 1. Импортируйте коллекцию `Laravel_CRUD_API.postman_collection.json` в Postman
 2. Убедитесь, что сервер запущен на `http://localhost:8000`

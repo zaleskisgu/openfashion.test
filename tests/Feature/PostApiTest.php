@@ -78,9 +78,11 @@ class PostApiTest extends TestCase
 
         $response->assertStatus(404)
                 ->assertJsonStructure([
-                    'error',
                     'message',
-                    'status'
+                    'exception',
+                    'file',
+                    'line',
+                    'trace'
                 ]);
     }
 
