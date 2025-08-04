@@ -15,13 +15,13 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'body' => $this->body,
-            'user' => new UserResource($this->whenLoaded('user')),
-            'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->resource->id,
+            'user_id' => $this->resource->user_id,
+            'body' => $this->resource->body,
+            'user' => new UserResource($this->resource->whenLoaded('user')),
+            'comments' => CommentResource::collection($this->resource->whenLoaded('comments')),
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
         ];
     }
 }
