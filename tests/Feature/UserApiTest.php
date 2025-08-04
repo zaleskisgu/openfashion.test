@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UserApiTest extends TestCase
@@ -19,8 +20,8 @@ class UserApiTest extends TestCase
         $this->artisan('db:seed');
     }
 
-    /** @test */
-    public function it_can_get_all_users()
+    #[Test]
+    public function it_can_get_all_users(): void
     {
         // Создаем тестовых пользователей
         User::factory()->count(3)->create();
@@ -42,8 +43,8 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_get_single_user()
+    #[Test]
+    public function it_can_get_single_user(): void
     {
         $user = User::factory()->create();
 
@@ -69,8 +70,8 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_404_for_nonexistent_user()
+    #[Test]
+    public function it_returns_404_for_nonexistent_user(): void
     {
         $response = $this->getJson('/api/users/999');
 
@@ -84,8 +85,8 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_create_user()
+    #[Test]
+    public function it_can_create_user(): void
     {
         $userData = [
             'name' => 'Test User',
@@ -119,8 +120,8 @@ class UserApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_validates_required_fields_when_creating_user()
+    #[Test]
+    public function it_validates_required_fields_when_creating_user(): void
     {
         $response = $this->postJson('/api/users', []);
 
@@ -128,8 +129,8 @@ class UserApiTest extends TestCase
                 ->assertJsonValidationErrors(['name', 'email', 'password']);
     }
 
-    /** @test */
-    public function it_validates_email_format_when_creating_user()
+    #[Test]
+    public function it_validates_email_format_when_creating_user(): void
     {
         $userData = [
             'name' => 'Test User',
@@ -143,8 +144,8 @@ class UserApiTest extends TestCase
                 ->assertJsonValidationErrors(['email']);
     }
 
-    /** @test */
-    public function it_validates_unique_email_when_creating_user()
+    #[Test]
+    public function it_validates_unique_email_when_creating_user(): void
     {
         $existingUser = User::factory()->create();
 
@@ -160,8 +161,8 @@ class UserApiTest extends TestCase
                 ->assertJsonValidationErrors(['email']);
     }
 
-    /** @test */
-    public function it_can_update_user()
+    #[Test]
+    public function it_can_update_user(): void
     {
         $user = User::factory()->create();
         $updateData = [
@@ -196,8 +197,8 @@ class UserApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_updating_nonexistent_user()
+    #[Test]
+    public function it_returns_404_when_updating_nonexistent_user(): void
     {
         $updateData = [
             'name' => 'Updated Name'
@@ -208,8 +209,8 @@ class UserApiTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_can_delete_user()
+    #[Test]
+    public function it_can_delete_user(): void
     {
         $user = User::factory()->create();
 
@@ -225,16 +226,16 @@ class UserApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_deleting_nonexistent_user()
+    #[Test]
+    public function it_returns_404_when_deleting_nonexistent_user(): void
     {
         $response = $this->deleteJson('/api/users/999');
 
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_can_get_user_posts()
+    #[Test]
+    public function it_can_get_user_posts(): void
     {
         $user = User::factory()->create();
         $user->posts()->createMany([
@@ -259,8 +260,8 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_empty_posts_for_user_without_posts()
+    #[Test]
+    public function it_returns_empty_posts_for_user_without_posts(): void
     {
         $user = User::factory()->create();
 
@@ -273,10 +274,11 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_get_user_comments()
+    #[Test]
+    public function it_can_get_user_comments(): void
     {
         $user = User::factory()->create();
+        /** @var \App\Models\Post $post */
         $post = $user->posts()->create(['body' => 'Test post']);
         
         $user->comments()->createMany([
@@ -302,8 +304,8 @@ class UserApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_empty_comments_for_user_without_comments()
+    #[Test]
+    public function it_returns_empty_comments_for_user_without_comments(): void
     {
         $user = User::factory()->create();
 

@@ -7,8 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $body
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property User $user
+ * @property \Illuminate\Database\Eloquent\Collection<int, Comment> $comments
+ */
 class Post extends Model
 {
+    /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
     /**

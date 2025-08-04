@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property Post $resource
+ */
 class PostResource extends JsonResource
 {
     /**
@@ -18,8 +22,8 @@ class PostResource extends JsonResource
             'id' => $this->resource->id,
             'user_id' => $this->resource->user_id,
             'body' => $this->resource->body,
-            'user' => new UserResource($this->resource->whenLoaded('user')),
-            'comments' => CommentResource::collection($this->resource->whenLoaded('comments')),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

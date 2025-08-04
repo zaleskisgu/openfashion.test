@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CommentApiTest extends TestCase
@@ -21,14 +22,15 @@ class CommentApiTest extends TestCase
         $this->artisan('db:seed');
     }
 
-    /** @test */
-    public function it_can_get_all_comments()
+    #[Test]
+    public function it_can_get_all_comments(): void
     {
+        // Создаем тестовых пользователей, посты и комментарии
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         Comment::factory()->count(3)->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
 
         $response = $this->getJson('/api/comments');
@@ -49,14 +51,14 @@ class CommentApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_get_single_comment()
+    #[Test]
+    public function it_can_get_single_comment(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $comment = Comment::factory()->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
 
         $response = $this->getJson("/api/comments/{$comment->id}");
@@ -83,8 +85,8 @@ class CommentApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_404_for_nonexistent_comment()
+    #[Test]
+    public function it_returns_404_for_nonexistent_comment(): void
     {
         $response = $this->getJson('/api/comments/999');
 
@@ -98,15 +100,14 @@ class CommentApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_create_comment()
+    #[Test]
+    public function it_can_create_comment(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
-        
         $commentData = [
-            'post_id' => $post->id,
             'user_id' => $user->id,
+            'post_id' => $post->id,
             'body' => 'This is a test comment'
         ];
 
@@ -126,35 +127,35 @@ class CommentApiTest extends TestCase
                 ])
                 ->assertJson([
                     'data' => [
-                        'post_id' => $post->id,
                         'user_id' => $user->id,
+                        'post_id' => $post->id,
                         'body' => 'This is a test comment'
                     ]
                 ]);
 
         $this->assertDatabaseHas('comments', [
-            'post_id' => $post->id,
             'user_id' => $user->id,
+            'post_id' => $post->id,
             'body' => 'This is a test comment'
         ]);
     }
 
-    /** @test */
-    public function it_validates_required_fields_when_creating_comment()
+    #[Test]
+    public function it_validates_required_fields_when_creating_comment(): void
     {
         $response = $this->postJson('/api/comments', []);
 
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['post_id', 'user_id', 'body']);
+                ->assertJsonValidationErrors(['user_id', 'post_id', 'body']);
     }
 
-    /** @test */
-    public function it_validates_post_exists_when_creating_comment()
+    #[Test]
+    public function it_validates_post_exists_when_creating_comment(): void
     {
         $user = User::factory()->create();
         $commentData = [
-            'post_id' => 999,
             'user_id' => $user->id,
+            'post_id' => 999,
             'body' => 'This is a test comment'
         ];
 
@@ -164,15 +165,13 @@ class CommentApiTest extends TestCase
                 ->assertJsonValidationErrors(['post_id']);
     }
 
-    /** @test */
-    public function it_validates_user_exists_when_creating_comment()
+    #[Test]
+    public function it_validates_user_exists_when_creating_comment(): void
     {
-        $user = User::factory()->create();
-        $post = Post::factory()->create(['user_id' => $user->id]);
-        
+        $post = Post::factory()->create();
         $commentData = [
-            'post_id' => $post->id,
             'user_id' => 999,
+            'post_id' => $post->id,
             'body' => 'This is a test comment'
         ];
 
@@ -182,16 +181,15 @@ class CommentApiTest extends TestCase
                 ->assertJsonValidationErrors(['user_id']);
     }
 
-    /** @test */
-    public function it_validates_body_length_when_creating_comment()
+    #[Test]
+    public function it_validates_body_length_when_creating_comment(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
-        
         $commentData = [
-            'post_id' => $post->id,
             'user_id' => $user->id,
-            'body' => str_repeat('a', 1001) // Слишком длинный текст
+            'post_id' => $post->id,
+            'body' => str_repeat('a', 1001) // Слишком длинное тело
         ];
 
         $response = $this->postJson('/api/comments', $commentData);
@@ -200,16 +198,15 @@ class CommentApiTest extends TestCase
                 ->assertJsonValidationErrors(['body']);
     }
 
-    /** @test */
-    public function it_can_update_comment()
+    #[Test]
+    public function it_can_update_comment(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $comment = Comment::factory()->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
-        
         $updateData = [
             'body' => 'Updated comment content'
         ];
@@ -240,8 +237,8 @@ class CommentApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_updating_nonexistent_comment()
+    #[Test]
+    public function it_returns_404_when_updating_nonexistent_comment(): void
     {
         $updateData = [
             'body' => 'Updated content'
@@ -252,14 +249,14 @@ class CommentApiTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_can_delete_comment()
+    #[Test]
+    public function it_can_delete_comment(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $comment = Comment::factory()->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
 
         $response = $this->deleteJson("/api/comments/{$comment->id}");
@@ -274,26 +271,26 @@ class CommentApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_deleting_nonexistent_comment()
+    #[Test]
+    public function it_returns_404_when_deleting_nonexistent_comment(): void
     {
         $response = $this->deleteJson('/api/comments/999');
 
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_cascades_deletes_when_post_is_deleted()
+    #[Test]
+    public function it_cascades_deletes_when_post_is_deleted(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $comment = Comment::factory()->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
 
         // Удаляем пост
-        $this->deleteJson("/api/posts/{$post->id}");
+        $post->delete();
 
         // Проверяем, что комментарий тоже удален
         $this->assertDatabaseMissing('comments', [
@@ -301,18 +298,18 @@ class CommentApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_cascades_deletes_when_user_is_deleted()
+    #[Test]
+    public function it_cascades_deletes_when_user_is_deleted(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
         $comment = Comment::factory()->create([
-            'post_id' => $post->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'post_id' => $post->id
         ]);
 
         // Удаляем пользователя
-        $this->deleteJson("/api/users/{$user->id}");
+        $user->delete();
 
         // Проверяем, что комментарий тоже удален
         $this->assertDatabaseMissing('comments', [

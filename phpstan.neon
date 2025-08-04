@@ -14,4 +14,7 @@ parameters:
         - app/Exceptions/Handler.php
         - app/Providers/AppServiceProvider.php
 
+    parallel:
+        maximumNumberOfProcesses: 1
+
  

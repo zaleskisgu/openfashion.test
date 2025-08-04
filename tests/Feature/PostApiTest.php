@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PostApiTest extends TestCase
@@ -20,9 +21,10 @@ class PostApiTest extends TestCase
         $this->artisan('db:seed');
     }
 
-    /** @test */
-    public function it_can_get_all_posts()
+    #[Test]
+    public function it_can_get_all_posts(): void
     {
+        // Создаем тестовых пользователей и посты
         $user = User::factory()->create();
         Post::factory()->count(3)->create(['user_id' => $user->id]);
 
@@ -43,8 +45,8 @@ class PostApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_get_single_post()
+    #[Test]
+    public function it_can_get_single_post(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
@@ -71,8 +73,8 @@ class PostApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_404_for_nonexistent_post()
+    #[Test]
+    public function it_returns_404_for_nonexistent_post(): void
     {
         $response = $this->getJson('/api/posts/999');
 
@@ -86,8 +88,8 @@ class PostApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_can_create_post()
+    #[Test]
+    public function it_can_create_post(): void
     {
         $user = User::factory()->create();
         $postData = [
@@ -121,8 +123,8 @@ class PostApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_validates_required_fields_when_creating_post()
+    #[Test]
+    public function it_validates_required_fields_when_creating_post(): void
     {
         $response = $this->postJson('/api/posts', []);
 
@@ -130,8 +132,8 @@ class PostApiTest extends TestCase
                 ->assertJsonValidationErrors(['user_id', 'body']);
     }
 
-    /** @test */
-    public function it_validates_user_exists_when_creating_post()
+    #[Test]
+    public function it_validates_user_exists_when_creating_post(): void
     {
         $postData = [
             'user_id' => 999,
@@ -144,13 +146,13 @@ class PostApiTest extends TestCase
                 ->assertJsonValidationErrors(['user_id']);
     }
 
-    /** @test */
-    public function it_validates_body_length_when_creating_post()
+    #[Test]
+    public function it_validates_body_length_when_creating_post(): void
     {
         $user = User::factory()->create();
         $postData = [
             'user_id' => $user->id,
-            'body' => str_repeat('a', 10001) // Слишком длинный текст
+            'body' => str_repeat('a', 10001) // Слишком длинное тело (больше лимита в 10000)
         ];
 
         $response = $this->postJson('/api/posts', $postData);
@@ -159,12 +161,11 @@ class PostApiTest extends TestCase
                 ->assertJsonValidationErrors(['body']);
     }
 
-    /** @test */
-    public function it_can_update_post()
+    #[Test]
+    public function it_can_update_post(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
-        
         $updateData = [
             'body' => 'Updated post content'
         ];
@@ -194,8 +195,8 @@ class PostApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_updating_nonexistent_post()
+    #[Test]
+    public function it_returns_404_when_updating_nonexistent_post(): void
     {
         $updateData = [
             'body' => 'Updated content'
@@ -206,8 +207,8 @@ class PostApiTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_can_delete_post()
+    #[Test]
+    public function it_can_delete_post(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
@@ -224,16 +225,16 @@ class PostApiTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_returns_404_when_deleting_nonexistent_post()
+    #[Test]
+    public function it_returns_404_when_deleting_nonexistent_post(): void
     {
         $response = $this->deleteJson('/api/posts/999');
 
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_can_get_post_comments()
+    #[Test]
+    public function it_can_get_post_comments(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
@@ -261,8 +262,8 @@ class PostApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_empty_comments_for_post_without_comments()
+    #[Test]
+    public function it_returns_empty_comments_for_post_without_comments(): void
     {
         $user = User::factory()->create();
         $post = Post::factory()->create(['user_id' => $user->id]);
@@ -276,8 +277,8 @@ class PostApiTest extends TestCase
                 ]);
     }
 
-    /** @test */
-    public function it_returns_404_for_comments_of_nonexistent_post()
+    #[Test]
+    public function it_returns_404_for_comments_of_nonexistent_post(): void
     {
         $response = $this->getJson('/api/posts/999/comments');
 
