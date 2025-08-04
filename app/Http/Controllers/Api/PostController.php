@@ -84,9 +84,15 @@ class PostController extends Controller
     public function comments(string $id): JsonResponse
     {
         $post = Post::with('comments')->findOrFail($id);
+        $comments = $post->comments;
+        
+        $message = $comments->count() > 0 
+            ? "Comments for post ID {$id}" 
+            : "No comments found for post ID {$id}";
+            
         return response()->json([
-            'message' => "Comments for post ID {$id}",
-            'data' => CommentResource::collection($post->comments)
+            'message' => $message,
+            'data' => CommentResource::collection($comments)
         ]);
     }
 }

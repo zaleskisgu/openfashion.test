@@ -85,9 +85,15 @@ class UserController extends Controller
     public function posts(string $id): JsonResponse
     {
         $user = User::with('posts')->findOrFail($id);
+        $posts = $user->posts;
+        
+        $message = $posts->count() > 0 
+            ? "Posts for user ID {$id}" 
+            : "No posts found for user ID {$id}";
+            
         return response()->json([
-            'message' => "Posts for user ID {$id}",
-            'data' => PostResource::collection($user->posts)
+            'message' => $message,
+            'data' => PostResource::collection($posts)
         ]);
     }
 
@@ -97,9 +103,15 @@ class UserController extends Controller
     public function comments(string $id): JsonResponse
     {
         $user = User::with('comments')->findOrFail($id);
+        $comments = $user->comments;
+        
+        $message = $comments->count() > 0 
+            ? "Comments for user ID {$id}" 
+            : "No comments found for user ID {$id}";
+            
         return response()->json([
-            'message' => "Comments for user ID {$id}",
-            'data' => CommentResource::collection($user->comments)
+            'message' => $message,
+            'data' => CommentResource::collection($comments)
         ]);
     }
 }
