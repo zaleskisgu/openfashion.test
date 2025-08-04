@@ -93,10 +93,11 @@ class CommentApiTest extends TestCase
         $response->assertStatus(404)
                 ->assertJsonStructure([
                     'message',
-                    'exception',
-                    'file',
-                    'line',
-                    'trace'
+                    'error'
+                ])
+                ->assertJson([
+                    'message' => 'Comment with ID 999 not found',
+                    'error' => 'Comment not found'
                 ]);
     }
 

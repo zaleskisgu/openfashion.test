@@ -81,10 +81,11 @@ class PostApiTest extends TestCase
         $response->assertStatus(404)
                 ->assertJsonStructure([
                     'message',
-                    'exception',
-                    'file',
-                    'line',
-                    'trace'
+                    'error'
+                ])
+                ->assertJson([
+                    'message' => 'Post with ID 999 not found',
+                    'error' => 'Post not found'
                 ]);
     }
 

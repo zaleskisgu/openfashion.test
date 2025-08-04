@@ -22,6 +22,7 @@
 - [x] **GET /api/users/{id}/posts** - все посты пользователя
 - [x] **GET /api/users/{id}/comments** - все комментарии пользователя
 - [x] **GET /api/posts/{id}/comments** - все комментарии поста
+- [x] **POST /api/database/reset** - сброс и заполнение базы данных
 
 ### Дополнительные возможности (плюс)
 - [x] **FormRequest** для валидации входных данных
@@ -53,7 +54,8 @@ database/migrations/
 app/Http/Controllers/Api/
 ├── UserController.php
 ├── PostController.php
-└── CommentController.php
+├── CommentController.php
+└── DatabaseController.php
 ```
 
 ### Валидация
@@ -139,6 +141,9 @@ database/factories/
 - `POST /api/comments` - создать комментарий
 - `PUT /api/comments/{id}` - обновить комментарий
 - `DELETE /api/comments/{id}` - удалить комментарий
+
+### Database Management
+- `POST /api/database/reset` - сброс и заполнение базы данных
 
 ## 🗄️ База данных
 

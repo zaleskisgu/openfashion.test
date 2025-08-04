@@ -78,10 +78,11 @@ class UserApiTest extends TestCase
         $response->assertStatus(404)
                 ->assertJsonStructure([
                     'message',
-                    'exception',
-                    'file',
-                    'line',
-                    'trace'
+                    'error'
+                ])
+                ->assertJson([
+                    'message' => 'User with ID 999 not found',
+                    'error' => 'User not found'
                 ]);
     }
 

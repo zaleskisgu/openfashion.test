@@ -204,6 +204,24 @@
           }
         }
       ]
+    },
+    {
+      "name": "Database Management",
+      "item": [
+        {
+          "name": "Reset Database",
+          "request": {
+            "method": "POST",
+            "url": "https://jz123.ru/api/database/reset",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 } 

@@ -43,7 +43,15 @@ class UserController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        
+        if (!$user) {
+            return response()->json([
+                'message' => "User with ID {$id} not found",
+                'error' => 'User not found'
+            ], 404);
+        }
+        
         return response()->json([
             'message' => "User ID {$id} retrieved successfully",
             'data' => new UserResource($user)
@@ -55,7 +63,15 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        
+        if (!$user) {
+            return response()->json([
+                'message' => "User with ID {$id} not found",
+                'error' => 'User not found'
+            ], 404);
+        }
+        
         $user->update($request->validated());
         
         return response()->json([
@@ -69,7 +85,15 @@ class UserController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        
+        if (!$user) {
+            return response()->json([
+                'message' => "User with ID {$id} not found",
+                'error' => 'User not found'
+            ], 404);
+        }
+        
         $user->delete();
         
         return response()->json([
@@ -82,7 +106,15 @@ class UserController extends Controller
      */
     public function posts(string $id): JsonResponse
     {
-        $user = User::with('posts')->findOrFail($id);
+        $user = User::with('posts')->find($id);
+        
+        if (!$user) {
+            return response()->json([
+                'message' => "User with ID {$id} not found",
+                'error' => 'User not found'
+            ], 404);
+        }
+        
         $posts = $user->posts;
         
         $message = $posts->count() > 0 
@@ -100,7 +132,15 @@ class UserController extends Controller
      */
     public function comments(string $id): JsonResponse
     {
-        $user = User::with('comments')->findOrFail($id);
+        $user = User::with('comments')->find($id);
+        
+        if (!$user) {
+            return response()->json([
+                'message' => "User with ID {$id} not found",
+                'error' => 'User not found'
+            ], 404);
+        }
+        
         $comments = $user->comments;
         
         $message = $comments->count() > 0 

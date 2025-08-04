@@ -42,7 +42,15 @@ class PostController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $post = Post::with(['user', 'comments'])->findOrFail($id);
+        $post = Post::with(['user', 'comments'])->find($id);
+        
+        if (!$post) {
+            return response()->json([
+                'message' => "Post with ID {$id} not found",
+                'error' => 'Post not found'
+            ], 404);
+        }
+        
         return response()->json([
             'message' => "Post ID {$id} retrieved successfully",
             'data' => new PostResource($post)
@@ -54,7 +62,15 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, string $id): JsonResponse
     {
-        $post = Post::findOrFail($id);
+        $post = Post::find($id);
+        
+        if (!$post) {
+            return response()->json([
+                'message' => "Post with ID {$id} not found",
+                'error' => 'Post not found'
+            ], 404);
+        }
+        
         $post->update($request->validated());
         
         return response()->json([
@@ -68,7 +84,15 @@ class PostController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $post = Post::findOrFail($id);
+        $post = Post::find($id);
+        
+        if (!$post) {
+            return response()->json([
+                'message' => "Post with ID {$id} not found",
+                'error' => 'Post not found'
+            ], 404);
+        }
+        
         $post->delete();
         
         return response()->json([
@@ -81,7 +105,15 @@ class PostController extends Controller
      */
     public function comments(string $id): JsonResponse
     {
-        $post = Post::with('comments')->findOrFail($id);
+        $post = Post::with('comments')->find($id);
+        
+        if (!$post) {
+            return response()->json([
+                'message' => "Post with ID {$id} not found",
+                'error' => 'Post not found'
+            ], 404);
+        }
+        
         $comments = $post->comments;
         
         $message = $comments->count() > 0 

@@ -795,6 +795,7 @@ DELETE /api/comments/{id}
    - Get all posts for a user
    - Get all comments for a user
    - Get all comments for a post
+   - Reset and seed database
 ✅ **Database**: SQLite database with migrations and seeders
 ✅ **Documentation**: Complete API documentation with examples
 
@@ -812,4 +813,32 @@ php artisan migrate:fresh --seed
 
 3. Test the API using Postman or any HTTP client
 
-The API will be available at `http://localhost:8000/api` 
+The API will be available at `http://localhost:8000/api`
+
+## Database Management
+
+### Reset and seed database
+```
+POST /api/database/reset
+```
+
+**Description:** This endpoint performs the equivalent of `php artisan migrate:fresh --seed`. It drops all tables, recreates them from migrations, and populates them with test data.
+
+**Response:**
+```json
+{
+  "message": "Database reset and seeded successfully",
+  "data": {
+    "migrations": "All tables recreated",
+    "seeding": "Test data inserted"
+  }
+}
+```
+
+**Error Response (500):**
+```json
+{
+  "message": "Failed to reset database",
+  "error": "Error details"
+}
+``` 

@@ -41,7 +41,15 @@ class CommentController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $comment = Comment::with(['user', 'post'])->findOrFail($id);
+        $comment = Comment::with(['user', 'post'])->find($id);
+        
+        if (!$comment) {
+            return response()->json([
+                'message' => "Comment with ID {$id} not found",
+                'error' => 'Comment not found'
+            ], 404);
+        }
+        
         return response()->json([
             'message' => "Comment ID {$id} retrieved successfully",
             'data' => new CommentResource($comment)
@@ -53,7 +61,15 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, string $id): JsonResponse
     {
-        $comment = Comment::findOrFail($id);
+        $comment = Comment::find($id);
+        
+        if (!$comment) {
+            return response()->json([
+                'message' => "Comment with ID {$id} not found",
+                'error' => 'Comment not found'
+            ], 404);
+        }
+        
         $comment->update($request->validated());
         
         return response()->json([
@@ -67,7 +83,15 @@ class CommentController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $comment = Comment::findOrFail($id);
+        $comment = Comment::find($id);
+        
+        if (!$comment) {
+            return response()->json([
+                'message' => "Comment with ID {$id} not found",
+                'error' => 'Comment not found'
+            ], 404);
+        }
+        
         $comment->delete();
         
         return response()->json([
